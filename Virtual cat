@@ -1,0 +1,155 @@
+import os
+from PIL import Image
+
+# Create project folder structure
+os.makedirs("virtual-cat/assets", exist_ok=True)
+
+# Save the uploaded cat image to the assets folder
+uploaded_image_path = "UploadedImage0.jpg"
+cat_image_path = "virtual-cat/assets/cat.png"
+Image.open(uploaded_image_path).save(cat_image_path)
+
+# Create index.html
+html_content = """<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chiku the Virtual Cat</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 id="greeting">Chiku is happy to see you!</h1>
+        <div class="pet-container">
+            <img src="assets/cat.png" alt="Virtual Cat" id="cat-image">
+            <div class="info">
+                <label for="cat-name">Cat's Name:</label>
+                <input type="text" id="cat-name" value="Chiku">
+                <p>Gender: Boy</p>
+                <p id="mood-display">Mood: Happy</p>
+            </div>
+        </div>
+        <div class="buttons">
+            <button onclick="feedCat()">Feed</button>
+            <button onclick="playWithCat()">Play</button>
+            <button onclick="putCatToSleep()">Sleep</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+"""
+
+with open("virtual-cat/index.html", "w") as f:
+    f.write(html_content)
+
+# Create style.css
+css_content = """
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ffe6f0;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    padding: 20px;
+}
+
+.pet-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#cat-image {
+    width: 200px;
+    height: auto;
+    margin: 20px 0;
+}
+
+.info {
+    margin-bottom: 20px;
+}
+
+input[type="text"] {
+    padding: 5px;
+    font-size: 16px;
+    margin-left: 10px;
+}
+
+.buttons button {
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    background-color: #ff99cc;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.buttons button:hover {
+    background-color: #ff66b2;
+}
+"""
+
+with open("virtual-cat/style.css", "w") as f:
+    f.write(css_content)
+
+# Create script.js
+js_content = """
+let mood = "Happy";
+let lastInteractionTime = Date.now();
+
+function updateMoodDisplay() {
+    const name = document.getElementById("cat-name").value;
+    document.getElementById("mood-display").textContent = `Mood: ${mood}`;
+    document.getElementById("greeting").textContent = `${name} is ${mood.toLowerCase()} to see you!`;
+    document.title = `${name} the Virtual Cat`;
+}
+
+function feedCat() {
+    mood = "Love";
+    lastInteractionTime = Date.now();
+    updateMoodDisplay();
+}
+
+function playWithCat() {
+    mood = "Happy";
+    lastInteractionTime = Date.now();
+    updateMoodDisplay();
+}
+
+function putCatToSleep() {
+    mood = "Sleepy";
+    lastInteractionTime = Date.now();
+    updateMoodDisplay();
+}
+
+function checkMoodDecay() {
+    const now = Date.now();
+    const elapsed = (now - lastInteractionTime) / 1000;
+
+    if (elapsed > 30 && mood === "Happy") {
+        mood = "Hungry";
+        updateMoodDisplay();
+    } else if (elapsed > 60 && mood === "Hungry") {
+        mood = "Mad";
+        updateMoodDisplay();
+    } else if (elapsed > 90 && mood === "Mad") {
+        mood = "Sad";
+        updateMoodDisplay();
+    }
+}
+
+document.getElementById("cat-name").addEventListener("input", updateMoodDisplay);
+setInterval(checkMoodDecay, 5000);
+updateMoodDisplay();
+"""
+
+with open("virtual-cat/script.js", "w") as f:
+    f.write(js_content)
+
+print("Virtual cat project setup is complete. You can now push the 'virtual-cat' folder to GitHub and run it locally.")
+
